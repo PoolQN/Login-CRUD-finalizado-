@@ -55,32 +55,7 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Agregar datos de prueba -->
-            <tr>
-              <td>1</td>
-              <td>Curso de Autocad</td>
-              <td>Administración</td>
-              <td>B</td>
-              <td>03/04/2023</td>
-              <td>200</td>
-              <td>
-                <a href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash3"></i></a>
-                <a href="#" class="btn btn-info btn-sm"><i class="bi bi-pencil-fill"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Curso Office</td>
-              <td>ETI</td>
-              <td>B</td>
-              <td>05/05/2023</td>
-              <td>260</td>
-              <td>
-                <a href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash3"></i></a>
-                <a href="#" class="btn btn-info btn-sm"><i class="bi bi-pencil-fill"></i></a>
-              </td>
-            </tr>
-            <!-- Fin datos de prueba -->
+
           </tbody>
         </table>
       </div>
@@ -100,7 +75,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="">
+          <form id="formulario-cursos">
             <div class="mb-3">
               <label for="nombrecurso" class="form-label">Nombre curso</label>
               <input type="text" class="form-control form-control-sm" id="nombrecurso">
@@ -135,18 +110,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary btn-sm">Guardar</button>
+          <button type="button" class="btn btn-primary btn-sm" id="guardar-curso">Guardar</button>
         </div>
       </div>
     </div>
   </div>
   
   
-  <!-- Optional: Place to the bottom of scripts -->
-  <script>
-    const myModal = new bootstrap.Modal(document.getElementById('modalId'), options)
-  
-  </script>
   <!-- Fin zona de modales -->
 
   <!-- Bootstrap JavaScript Libraries -->
@@ -175,6 +145,39 @@
           }
         });
       }
+
+      function registrarCurso(){
+        //Pendiente de validar...
+        if (confirm("¿Está seguro de registrar este nuevo curso?")){
+          $.ajax({
+            url: '../controllers/curso.controller.php',
+            type: 'POST',
+            data: {
+              operacion     : 'registrar',
+              nombrecurso   : $("#nombrecurso").val(),
+              especialidad  : $("#especialidad").val(),
+              complejidad   : $("#complejidad").val(),
+              fechainicio   : $("#fechainicio").val(),
+              precio        : $("#precio").val()
+            },
+            success: function(result){
+              if (result == ""){
+                //Reiniciar el formulario
+                $("#formulario-cursos")[0].reset();
+                
+                //Actualizar la tabla
+                mostrarCursos();
+
+                //Cerrar el modal
+                $("#modal-registro-cursos").modal('hide');
+              }
+            }
+          });
+        }
+      }
+
+      //Eventos
+      $("#guardar-curso").click(registrarCurso);
 
       //Ejecución automática
       mostrarCursos();
