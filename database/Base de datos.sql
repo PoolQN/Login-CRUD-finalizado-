@@ -117,7 +117,7 @@ CALL spu_cursos_actualizar(3, 'java', 'ETI', 'A', '2023-06-21', 320);
 
 CREATE TABLE usuarios
 (
-	idusuarios			INT AUTO_INCREMENT PRIMARY KEY,
+	idusuario			INT AUTO_INCREMENT PRIMARY KEY,
 	nombreusuario		VARCHAR(30)			NOT NULL,
 	claveacceso			VARCHAR(90)			NOT NULL,
 	apellidos			VARCHAR(30)			NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE usuarios
 
 INSERT INTO usuarios (nombreusuario, claveacceso, apellidos, nombres) VALUES
 	('POOL', '123456', 'Quesada Nolasco', 'Pool'),
-	('Jose', '123456', 'Marcos Perez', 'Jose');
+	('JOSE', '123456', 'Marcos Perez', 'Jose');
 
 SELECT * FROM usuarios;
 
@@ -147,13 +147,81 @@ WHERE idusuario = 2;
 
 SELECT * FROM usuarios;
 
-DELIMITER
-CREATE PROCEDURE spu_usuarios_login(IN _nombreusuarios VARCHAR(30))
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_login(IN _nombreusuario VARCHAR(30))
 BEGIN	
-	SELECT * FROM idusuarios, nombreusuario, claveacceso, apellidos, nombres, nivelacceso
+	SELECT idusuario, nombreusuario, claveacceso,
+						apellidos, nombres, nivelacceso
 	FROM usuarios
 	WHERE nombreusuario = _nombreusuario AND estado = '1';
 END $$
-
+	
 CALL spu_usuarios_login('POOL');
+
+
+-- Registrar usuario
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_registrar
+(
+	IN _nombreusuario			VARCHAR(30),
+	IN _claveacceso			VARCHAR(90),
+	IN _apellidos				VARCHAR(30),
+	IN _nombres					VARCHAR(30)
+)
+BEGIN
+	INSERT INTO usuarios (nombreusuario, claveacceso, apellidos, nombres) VALUES
+								(_nombreusuario, _claveacceso, _apellidos, _nombres);
+END $$
+
+CALL spu_usuarios_registrar('PEDRO', '789456', 'Perez Gomez','Raul');
+CALL spu_usuarios_registrar('LUIS', '147852', 'Campos Bautista','Luis');
+
+-- Mostrar Usuarios
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_mostrar()
+BEGIN
+	SELECT 	*
+		FROM usuarios
+		WHERE estado = '1'
+		ORDER BY idusuario DESC;
+END $$
+
+CALL spu_usuarios_mostrar()
+
+-- Eliminar Usuarios
+DROP PROCEDURE spu_usuarios_eliminar
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_eliminar(IN _idusuario INT)
+BEGIN
+	UPDATE usuarios
+		SET estado = '0' 
+		WHERE idusuario = _idusuario;
+END $$
+
+CALL spu_usuarios_eliminar(3);
+SELECT * FROM usuarios;
+
+-- Actualizar Usuarios
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_actualizar
+(
+	IN _idusuario				INT,
+	IN _nombreusuario			VARCHAR(30),
+	IN _claveacceso			VARCHAR(90),
+	IN _apellidos				VARCHAR(30),
+	IN _nombres					VARCHAR(30)
+)
+BEGIN
+	UPDATE usuarios SET
+		nombreusuario = _nombreusuario,
+		claveacceso = _claveacceso,
+		apellidos = _apellidos,
+		nombres = _nombres
+	WHERE idusuario = _idusuario;
+END $$
+
+SELECT * FROM usuarios WHERE idusuario = 3;
+CALL spu_usuarios_actualizar(3, 'MAX', '852963', 'Sarmiento Paredes', 'Maximo');
+
+
 
