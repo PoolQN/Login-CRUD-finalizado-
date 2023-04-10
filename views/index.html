@@ -70,11 +70,11 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header bg-secondary text-light">
-          <h5 class="modal-title" id="modalTitleId">Registro de cursos</h5>
+          <h5 class="modal-title" id="modal-titulo">Registro de cursos</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="formulario-cursos">
+          <form id="formulario-cursos" autocomplete="off">
             <div class="mb-3">
               <label for="nombrecurso" class="form-label">Nombre curso</label>
               <input type="text" class="form-control form-control-sm" id="nombrecurso">
@@ -133,6 +133,10 @@
   <script>
     $(document).ready(function (){
 
+      //Variables de ámbito general (accesibles)
+      let datosNuevos = true;
+      let idcursoactualizar = -1;
+
       function mostrarCursos(){
         $.ajax({
           url: '../controllers/curso.controller.php',
@@ -147,18 +151,27 @@
 
       function registrarCurso(){
         //Pendiente de validar...
-        if (confirm("¿Está seguro de registrar este nuevo curso?")){
+        if (confirm("¿Está seguro de salvar los datos?")){
+          
+          //Crear un objeto conteniendo los datos a guardar
+          let datos = {
+            operacion     : 'registrar',
+            idcurso       : idcursoactualizar,
+            nombrecurso   : $("#nombrecurso").val(),
+            especialidad  : $("#especialidad").val(),
+            complejidad   : $("#complejidad").val(),
+            fechainicio   : $("#fechainicio").val(),
+            precio        : $("#precio").val()
+          };
+
+          if (!datosNuevos){
+            datos["operacion"] = "actualizar";
+          }
+
           $.ajax({
             url: '../controllers/curso.controller.php',
             type: 'POST',
-            data: {
-              operacion     : 'registrar',
-              nombrecurso   : $("#nombrecurso").val(),
-              especialidad  : $("#especialidad").val(),
-              complejidad   : $("#complejidad").val(),
-              fechainicio   : $("#fechainicio").val(),
-              precio        : $("#precio").val()
-            },
+            data: datos,
             success: function(result){
               if (result == ""){
                 //Reiniciar el formulario
@@ -175,8 +188,15 @@
         }
       }
 
+      function abrirModal(){
+        datosNuevos = true; //Variable de tipo BANDERA
+        $("#modal-titulo").html("Registro de cursos");
+        $("#formulario-cursos")[0].reset();
+      }
+
       //Eventos
       $("#guardar-curso").click(registrarCurso);
+      $("#abrir-modal").click(abrirModal);
 
       //Al pulsar clic sobre botón ROJO, se elimine el registro
       //Detectaremos eventos de los objetos creados de manera asíncrona en...
@@ -215,12 +235,19 @@
           success: function(result){
             console.log(result);
 
+            //Configurar bandera
+            datosNuevos = false;
+
             //Retornamos los valores a los controles de FORM
+            idcursoactualizar = result["idcurso"];
             $("#nombrecurso").val(result["nombrecurso"]);
             $("#especialidad").val(result["especialidad"]);
             $("#complejidad").val(result["complejidad"]);
             $("#fechainicio").val(result["fechainicio"]);
             $("#precio").val(result["precio"]);
+
+            //Cambiar el título del modal
+            $("#modal-titulo").html("Actualizar datos de curso");
 
             //Ponemos al modal en pantalla
             $("#modal-registro-cursos").modal("show");
