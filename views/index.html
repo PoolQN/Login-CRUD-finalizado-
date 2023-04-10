@@ -10,7 +10,7 @@
   <!-- Bootstrap CSS v5.2.1 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-
+  
   <!-- Iconos de Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
 
@@ -26,22 +26,20 @@
             <strong>LISTA DE CURSOS</strong>
           </div>
           <div class="col-md-6 text-end">
-            <button class="btn btn-success btn-sm" id="abrir-modal" data-bs-toggle="modal" data-bs-target="#modal-registro-cursos">
-              <i class="bi bi-plus-circle-fill"></i> Agregar curso
-            </button>
+            <button class="btn btn-success btn-sm" id="abrir-modal" data-bs-toggle="modal" data-bs-target="#modal-registro-cursos"><i class="bi bi-plus-square"> Agregar Curso</i></button>
           </div>
         </div>
       </div>
       <div class="card-body">
         <table class="table table-sm table-striped" id="tabla-cursos">
           <colgroup>
-            <col width = "5%">
-            <col width = "30%">
-            <col width = "25%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
+            <col width="5%">
+            <col width="30%">
+            <col width="25%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
           </colgroup>
           <thead>
             <tr>
@@ -55,19 +53,23 @@
             </tr>
           </thead>
           <tbody>
-
+            <!-- Agregar datos de prueba -->
+            <!-- Fin datos de prueba -->
           </tbody>
         </table>
       </div>
       <div class="card-footer text-end">
-        <button class="btn btn-primary btn-sm" id="actualizar">Actualizar datos</button>
+        <button class="btn btn-primary btn-sm" id="actualizar">Actualizar Datos</button>
       </div>
     </div>
-  </div> <!-- Fin de container -->
+  </div>
+  <!-- Fin de container -->
 
-  <!-- Zona de modales -->
-    <div class="modal fade" id="modal-registro-cursos" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+
+  <!-- Zona de Modales -->
+  <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+  <div class="modal fade" id="modal-registro-cursos" tabindex="-1"  role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
       <div class="modal-content">
         <div class="modal-header bg-secondary text-light">
           <h5 class="modal-title" id="modal-titulo">Registro de cursos</h5>
@@ -76,16 +78,16 @@
         <div class="modal-body">
           <form id="formulario-cursos" autocomplete="off">
             <div class="mb-3">
-              <label for="nombrecurso" class="form-label">Nombre curso</label>
+              <label for="nombrecurso" class="form-label">Nombre Curso</label>
               <input type="text" class="form-control form-control-sm" id="nombrecurso">
             </div>
             <div class="mb-3">
               <label for="especialidad" class="form-label">Especialidad</label>
               <select id="especialidad" class="form-select form-select-sm">
-                <option value="">Seleccione</option>
-                <option value="ETI">ETI</option>
-                <option value="Administración">Administración</option>
-                <option value="Mecánica">Mecánica</option>
+              <option value="">Seleccione</option>
+              <option value="ETI">ETI</option>
+              <option value="Administración">Administración</option>
+              <option value="Mecánica">Mecánica</option>
               </select>
             </div>
             <div class="mb-3">
@@ -131,9 +133,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
   <script>
-    $(document).ready(function (){
+    $(document).ready(function(){
 
-      //Variables de ámbito general (accesibles)
+      // Variables de ámbito general (accesibles)
       let datosNuevos = true;
       let idcursoactualizar = -1;
 
@@ -141,7 +143,7 @@
         $.ajax({
           url: '../controllers/curso.controller.php',
           type: 'POST',
-          data: { operacion: 'listar'},
+          data: {operacion: 'listar'},
           dataType: 'text',
           success: function(result){
             $("#tabla-cursos tbody").html(result);
@@ -150,19 +152,19 @@
       }
 
       function registrarCurso(){
-        //Pendiente de validar...
+        // Pendiente de validar...
         if (confirm("¿Está seguro de salvar los datos?")){
-          
-          //Crear un objeto conteniendo los datos a guardar
+
+          // Crear un objeto conteniendo los datos a guardar
           let datos = {
-            operacion     : 'registrar',
-            idcurso       : idcursoactualizar,
-            nombrecurso   : $("#nombrecurso").val(),
-            especialidad  : $("#especialidad").val(),
-            complejidad   : $("#complejidad").val(),
-            fechainicio   : $("#fechainicio").val(),
-            precio        : $("#precio").val()
-          };
+              operacion     : 'registrar',
+              idcurso       : idcursoactualizar,
+              nombrecurso   : $("#nombrecurso").val(),
+              especialidad  : $("#especialidad").val(),
+              complejidad   : $("#complejidad").val(),
+              fechainicio   : $("#fechainicio").val(),
+              precio        : $("#precio").val()
+            };
 
           if (!datosNuevos){
             datos["operacion"] = "actualizar";
@@ -174,13 +176,13 @@
             data: datos,
             success: function(result){
               if (result == ""){
-                //Reiniciar el formulario
+                // Reiniciar el formulario
                 $("#formulario-cursos")[0].reset();
-                
-                //Actualizar la tabla
+
+                // Actualizar la tabla
                 mostrarCursos();
 
-                //Cerrar el modal
+                // Cerrar el modal
                 $("#modal-registro-cursos").modal('hide');
               }
             }
@@ -189,26 +191,25 @@
       }
 
       function abrirModal(){
-        datosNuevos = true; //Variable de tipo BANDERA
+        datosNuevos = true; // Variable de tipo BANDERA
         $("#modal-titulo").html("Registro de cursos");
         $("#formulario-cursos")[0].reset();
       }
-
-      //Eventos
+      // Eventos
       $("#guardar-curso").click(registrarCurso);
       $("#abrir-modal").click(abrirModal);
 
-      //Al pulsar clic sobre botón ROJO, se elimine el registro
-      //Detectaremos eventos de los objetos creados de manera asíncrona en...
+      // Al pulsar click sobre el botón ROJO, se elimine el registro
+      // Detectaremos eventos de los objetos reados de manera asincrona en...
       $("#tabla-cursos tbody").on("click", ".eliminar", function (){
         const idcursoEliminar = $(this).data("idcurso");
-        if (confirm("¿Está seguro de proceder?")){
+        if (confirm("¿Esta seguro de proceder?")){
           $.ajax({
             url: '../controllers/curso.controller.php',
             type: 'POST',
             data: {
-              operacion   : 'eliminar',
-              idcurso     : idcursoEliminar
+              operacion : 'eliminar',
+              idcurso   : idcursoEliminar
             },
             success: function(result){
               if (result == ""){
@@ -219,44 +220,44 @@
         }
       });
 
-      //Detectar clic en EDITAR (asíncrono)
-      //on() permite gestionar-controlar eventos
+      // Detectar clicck en EDITAR (asíncrono)
+      // on() permite gestionar-controlar eventos
       $("#tabla-cursos tbody").on("click", ".editar", function(){
         const idcursoeditar = $(this).data("idcurso");
-        
+
         $.ajax({
           url: '../controllers/curso.controller.php',
           type: 'POST',
           data: {
-            operacion   : 'obtenercurso',
-            idcurso     : idcursoeditar
+            operacion : 'obtenercurso',
+            idcurso   : idcursoeditar
           },
           dataType: 'JSON',
           success: function(result){
             console.log(result);
 
-            //Configurar bandera
+            // Configurar bandera
             datosNuevos = false;
 
-            //Retornamos los valores a los controles de FORM
-            idcursoactualizar = result["idcurso"];
+            // Retornamos los valores a los controles de FORM
+            idcursoactualizar = result['idcurso'];
             $("#nombrecurso").val(result["nombrecurso"]);
             $("#especialidad").val(result["especialidad"]);
             $("#complejidad").val(result["complejidad"]);
             $("#fechainicio").val(result["fechainicio"]);
             $("#precio").val(result["precio"]);
 
-            //Cambiar el título del modal
+            // Cambiar el titulo del modal
             $("#modal-titulo").html("Actualizar datos de curso");
 
-            //Ponemos al modal en pantalla
+            // Ponemos al modal en pantalla
             $("#modal-registro-cursos").modal("show");
           }
         });
 
       });
 
-      //Ejecución automática
+      // Ejecución automatica
       mostrarCursos();
 
     });
