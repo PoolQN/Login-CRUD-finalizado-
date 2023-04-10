@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login']) || $_SESSION['login'] == false){
+  header('Location:../index.php');
+}
+
+?>
+
 <!doctype html>
 <html lang="es">
 
@@ -59,7 +68,7 @@
         </table>
       </div>
       <div class="card-footer text-end">
-        <button class="btn btn-primary btn-sm" id="actualizar">Actualizar Datos</button>
+        <a href="../controllers/usuario.controller.php?operacion=finalizar">Cerrar Sesión</a>
       </div>
     </div>
   </div>

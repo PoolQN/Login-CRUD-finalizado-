@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (isset($_SESSION['login']) && $_SESSION['login']){
+  header('location:views/index.php');
+}
+?>
+
 <!doctype html>
 <html lang="es">
 
@@ -15,12 +23,12 @@
 
 <body>
   <div class="container">
-    <div class="row">
+    <div class="row mt-4">
       <div class="col-md-4"></div>
       <div class="col-md-4">
         <!--Inicio CARD-->
         <div class="card">
-          <div class="card-header">
+          <div class="card-header bg-primary text-light">
             <strong>Inicio de Sesión</strong>
           </div>
           <div class="card-body">
@@ -36,13 +44,51 @@
             </form>
           </div>
           <div class="card-footer text-end">
-            <button type="button" class="btn btn-sm btn-success">Iniciar Sesión</button>
+            <button type="button" class="btn btn-sm btn-success" id="iniciar-sesion">Iniciar Sesión</button>
           </div>
         </div>
         <!--Fin de CARD-->
       </div>
     </div>
   </div>
+
+  
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+  <SCript>
+    $(document).ready(function(){
+      function iniciarSesion(){
+        const usuario = $("#usuario").val();
+        const clave = $("#clave").val();
+
+        if (usuario != "" &&  clave !=""){
+          $.ajax({
+            url  :     'controllers/usuario.controller.php',
+            type :     'POST',
+            data :  {
+              operacion   :     'login',
+              nombreusuario   :   usuario,
+              claveIngresada  :   clave
+            },
+            dataType : 'JSON',
+            success  :  function (result){
+              console.log(result);
+              if (result["status"]){
+                window.location.href = "views/index.php";
+              }else{
+                alert(result["mensaje"]);
+              }
+            }
+          });
+        }
+      }
+
+      $("#iniciar-sesion").click(iniciarSesion);
+
+    });
+  </SCript>
+
 </body>
 
 </html>
