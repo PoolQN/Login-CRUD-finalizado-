@@ -200,6 +200,13 @@
         }
       });
 
+      //Detectar clic en EDITAR (asíncrono)
+      //on() permite gestionar-controlar eventos
+      $("#tabla-cursos tbody").on("click", ".editar", function(){
+        const idcursoeditar = $(this).data("idcurso");
+        console.log(idcursoeditar);
+      });
+
       //Ejecución automática
       mostrarCursos();
 
