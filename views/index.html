@@ -66,8 +66,7 @@
   </div> <!-- Fin de container -->
 
   <!-- Zona de modales -->
-  <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-  <div class="modal fade" id="modal-registro-cursos" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal fade" id="modal-registro-cursos" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header bg-secondary text-light">
@@ -204,7 +203,30 @@
       //on() permite gestionar-controlar eventos
       $("#tabla-cursos tbody").on("click", ".editar", function(){
         const idcursoeditar = $(this).data("idcurso");
-        console.log(idcursoeditar);
+        
+        $.ajax({
+          url: '../controllers/curso.controller.php',
+          type: 'POST',
+          data: {
+            operacion   : 'obtenercurso',
+            idcurso     : idcursoeditar
+          },
+          dataType: 'JSON',
+          success: function(result){
+            console.log(result);
+
+            //Retornamos los valores a los controles de FORM
+            $("#nombrecurso").val(result["nombrecurso"]);
+            $("#especialidad").val(result["especialidad"]);
+            $("#complejidad").val(result["complejidad"]);
+            $("#fechainicio").val(result["fechainicio"]);
+            $("#precio").val(result["precio"]);
+
+            //Ponemos al modal en pantalla
+            $("#modal-registro-cursos").modal("show");
+          }
+        });
+
       });
 
       //Ejecución automática
