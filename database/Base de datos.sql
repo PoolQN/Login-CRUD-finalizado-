@@ -22,6 +22,7 @@ INSERT INTO cursos (nombrecurso, especialidad, complejidad, fechainicio, precio)
 	('Inventor', 'Mecánica', 'M', '2023-04-29', 380);
 
 SELECT * FROM cursos;
+UPDATE cursos SET estado = '1';
 
 -- STORE PROCEDURE
 -- Un procedimiento almacenado es un PROGRAMA que se ejecuta desde el
@@ -74,11 +75,17 @@ BEGIN
 		WHERE idcurso = _idcurso;
 END $$
 
-
 CALL spu_cursos_eliminar(4);
 SELECT * FROM cursos;
 
+-- Lunes 10 abril 2023
+DELIMITER $$
+CREATE PROCEDURE spu_cursos_recuperar_id(IN _idcurso INT)
+BEGIN
+	SELECT * FROM cursos WHERE idcurso = _idcurso;
+END $$
 
+CALL spu_cursos_recuperar_id(3);
 
 
 

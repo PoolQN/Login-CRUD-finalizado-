@@ -61,4 +61,9 @@ if (isset($_POST['operacion'])){
     $curso->eliminarCurso($_POST['idcurso']);
   }
 
+  if ($_POST['operacion'] == 'obtenercurso'){
+    $registro = $curso->getCurso($_POST['idcurso']);
+    echo json_encode($registro);
+  }
+
 }
